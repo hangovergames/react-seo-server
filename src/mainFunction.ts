@@ -10,7 +10,7 @@ ProcessUtils.initEnvFromDefaultFiles();
 import {
     BACKEND_LOG_LEVEL,
     BACKEND_PORT,
-    REACT_APP_DIR
+    BACKEND_SCRIPT_NAME
 } from "./runtime-constants";
 import LogService from "./fi/nor/ts/LogService";
 
@@ -23,7 +23,6 @@ import RequestServer from "./fi/nor/ts/RequestServer";
 import RequestRouter from "./fi/nor/ts/requestServer/RequestRouter";
 import Headers from "./fi/nor/ts/request/Headers";
 import HttpServerController from "./controller/HttpServerController";
-import TestApp from "./TestApp";
 
 const LOG = LogService.createLogger('main');
 
@@ -35,6 +34,18 @@ export async function main (
 
     try {
 
+        args.shift();
+        args.shift();
+
+        const appDir       : string | undefined = args.shift();
+        const appComponent : string | undefined = args.shift();
+        const initFile     : string | undefined = args.shift();
+
+        if ( !appDir || !appComponent ) {
+            LOG.error(`USAGE: ${BACKEND_SCRIPT_NAME} APP_DIR APP_COMPONENT_FILE`);
+            return;
+        }
+
         Headers.setLogLevel(LogLevel.INFO);
         RequestRouter.setLogLevel(LogLevel.INFO);
         RequestClient.setLogLevel(LogLevel.INFO);
@@ -44,14 +55,35 @@ export async function main (
 
         LOG.debug(`Loglevel as ${LogService.getLogLevelString()}`);
 
+        // Hijack require for TypeScript ES2020 interop
+        const ModuleM = require('module');
+        const Module = (ModuleM as any)?.default ?? ModuleM;
+        const {require: oldRequire} = Module.prototype;
+        Module.prototype.require = function hijacked (file: string) {
+            LOG.debug(`Loading 1: "${file}"`);
+            // noinspection JSVoidFunctionReturnValueUsed
+            const result = oldRequire.apply(this, [file]);
+            return result?.default ?? result;
+        };
+
+
+        if (initFile) {
+            require(initFile);
+        }
+
+        const App = require(appComponent);
+
+        const httpController = new HttpServerController(
+            appDir,
+            App
+        );
+
         server = HTTP.createServer(
             (
                 req : IncomingMessage,
                 res : ServerResponse
             ) => {
-
-                HttpServerController.handleRequest(req, res, REACT_APP_DIR, TestApp);
-
+                httpController.handleRequest(req, res);
             }
         );
 
@@ -61,8 +93,8 @@ export async function main (
 
         const stopPromise = new Promise<void>((resolve, reject) => {
             try {
-                LOG.debug('Stopping server from RequestServer stop event');
                 server.once('close', () => {
+                    LOG.debug('Stopping server from RequestServer stop event');
                     resolve();
                 });
             } catch(err) {

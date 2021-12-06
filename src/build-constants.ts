@@ -21,22 +21,12 @@ function parseNonEmptyString (value : any) : string | undefined {
 /**
  * @__PURE__
  */
-export const BUILD_USAGE_URL = 'https://github.com/hangovergames';
-
-/**
- * @__PURE__
- */
 export const BUILD_VERSION : string  = /* @__PURE__ */parseNonEmptyString('%{BUILD_VERSION}') ?? '?';
 
 /**
  * @__PURE__
  */
-export const BUILD_BACKEND_URL : string  = /* @__PURE__ */parseNonEmptyString('%{BUILD_BACKEND_URL}') ?? 'http://0.0.0.0:3000';
-
-/**
- * @__PURE__
- */
-export const BUILD_COMMAND_NAME : string  = /* @__PURE__ */parseNonEmptyString('%{BUILD_COMMAND_NAME}') ?? 'nor-backend';
+export const BUILD_COMMAND_NAME : string  = /* @__PURE__ */parseNonEmptyString('%{BUILD_COMMAND_NAME}') ?? 'react-seo-server';
 
 /**
  * @__PURE__

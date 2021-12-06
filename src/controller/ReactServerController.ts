@@ -19,18 +19,23 @@ export default class ReactServerController {
 
         const indexFile = PATH.resolve(appDir, indexFileName);
 
+        let htmlString : string = '';
         try {
-
-            const htmlString : string = await FileSystemService.readTextFile(indexFile);
-
-            const bodyString = ReactServerController._renderHtmlString(url, htmlString, App);
-
-            return ResponseEntity.ok<string>().body( bodyString );
-
+            htmlString = await FileSystemService.readTextFile(indexFile);
         } catch (err) {
-            LOG.error(`Could not read "${indexFile}":`, err);
+            LOG.error(`Could not read "${indexFile}" for "${url}":`, err);
             return ResponseEntity.internalServerError<string>().body('Internal Server Error');
         }
+
+        let bodyString : string = '';
+        try {
+            bodyString = ReactServerController._renderHtmlString(url, htmlString, App);
+        } catch (err) {
+            LOG.error(`Could not render "${url}":`, err);
+            return ResponseEntity.internalServerError<string>().body('Internal Server Error');
+        }
+
+        return ResponseEntity.ok<string>().body( bodyString );
 
     }
 
@@ -40,8 +45,12 @@ export default class ReactServerController {
         App: any
     ) : string {
 
+        LOG.debug(`_renderHtmlString: typeof url: `, typeof url);
+        LOG.debug(`_renderHtmlString: typeof htmlString: `, typeof htmlString);
+        LOG.debug(`_renderHtmlString: typeof App: `, typeof App);
+
         const appString : string = StaticReactAppService.renderString(url, App);
-        LOG.debug(`appString: `, appString);
+        LOG.debug(`_renderHtmlString: appString: `, appString);
 
         const rootDivId = 'root';
 
