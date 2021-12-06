@@ -1,9 +1,11 @@
-# react-seo-server
+# @hangovergames/ssr-server
 
 Server side rendering HTTP server for ReactJS.
 
 It is intended to have dynamic HTML meta tag support (e.g. SEO), though that's still under 
 development.
+
+**NOTE! It's pretty experimental and does not work as standalone yet.**
 
 ### Environment Variables
 
@@ -11,16 +13,16 @@ development.
 | -------------------- | ----------------------------------------------------------------------------- |
 | `BUILD_VERSION`      | The version to compile in the build. Defaults to package.json version.        |
 | `BUILD_NODE_ENV`     | The build mode. Defaults to `production`.                                     |
-| `BUILD_COMMAND_NAME` | The name for the server command in usage help. Defaults to `react-seo-server` |
+| `BUILD_COMMAND_NAME` | The name for the server command in usage help. Defaults to `ssr-server` |
 | `BUILD_LOG_LEVEL`    | THe log level. Defaults to `INFO`.                                            |
 
 ### Install 
 
-`npm i -g @hangovergames/react-seo-server`
+`npm i -g @hangovergames/ssr-server`
 
 ### Usage
 
-`react-seo-server /path/to/frontend/build /path/to/frontend/app/App.js /path/to/frontend/app/index.js`
+`ssr-server /path/to/frontend/build /path/to/frontend/app/App.js /path/to/frontend/app/index.js`
 
 ...where arguments are:
 

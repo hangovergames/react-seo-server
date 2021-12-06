@@ -29,6 +29,6 @@
     "noEmit": true
   },
   "include": [
-    "./src/react-seo-server.ts"
+    "./src/ssr-server.ts"
   ]
 }

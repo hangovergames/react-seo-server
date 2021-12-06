@@ -5,15 +5,14 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import json from '@rollup/plugin-json';
-import { babel, getBabelOutputPlugin } from '@rollup/plugin-babel';
-import { uglify } from "rollup-plugin-uglify";
-import PATH from 'path';
+// import { babel, getBabelOutputPlugin } from '@rollup/plugin-babel';
+// import { uglify } from "rollup-plugin-uglify";
+// import PATH from 'path';
 import replace from '@rollup/plugin-replace';
 
 const BUILD_VERSION               = process?.env?.BUILD_VERSION                            ?? pkg?.version ?? '';
 const BUILD_NODE_ENV              = process?.env?.BUILD_NODE_ENV ?? process?.env?.NODE_ENV ?? 'production';
 const BUILD_DATE                  = new Date().toISOString()                               ?? '';
-const BUILD_BACKEND_URL           = process?.env?.BUILD_BACKEND_URL                        ?? '';
 const BUILD_COMMAND_NAME          = process?.env?.BUILD_COMMAND_NAME                       ?? '';
 const BUILD_LOG_LEVEL             = process?.env?.BUILD_LOG_LEVEL                          ?? '';
 
@@ -28,7 +27,7 @@ console.log(`Building with options:
 `);
 
 export default {
-    input: 'src/react-seo-server.ts',
+    input: 'src/ssr-server.ts',
     external: [
         /node_modules.*react/,
         /node_modules.*i18next/
@@ -42,10 +41,10 @@ export default {
             preventAssignment: true
         }),
 
-        // See also ./src/runtime-constants.ts
+        // See also ./src/runtime.ts
         replace({
             exclude: 'node_modules/**',
-            // include: './src/build-constants.ts',
+            // include: './src/build.ts',
             values: {
                 'BUILD_VERSION'                : BUILD_VERSION,
                 'BUILD_NODE_ENV'               : BUILD_NODE_ENV,

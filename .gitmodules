@@ -2,3 +2,7 @@
 	path = src/fi/nor/ts
 	url = git@github.com:sendanor/typescript.git
 	branch = main
+[submodule "src/fi/hangovergames/ssr"]
+	branch = main
+	path = src/fi/hangovergames/ssr
+	url = git@github.com:hangovergames/ssr.git

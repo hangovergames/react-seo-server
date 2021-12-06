@@ -1,6 +1,6 @@
 {
-  "name": "react-seo-server",
-  "description": "Server side rendering HTTP server for ReactJS",
+  "name": "ssr-server",
+  "description": "Server Side Rendering HTTP server for ReactJS",
   "version": "0.0.1",
   "bin": {
     "react-seo-server" : "./dist/react-seo-server.js"
